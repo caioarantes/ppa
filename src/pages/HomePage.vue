@@ -1,5 +1,11 @@
 <script setup>
 import subjects from '../data/subjects'
+import ProgressBar from '../components/ProgressBar.vue'
+import { useProgress } from '../composables/useProgress'
+import { useAuth } from '../composables/useAuth'
+
+const { subjectStats, overall } = useProgress()
+const { user, firebaseEnabled } = useAuth()
 </script>
 
 <template>
@@ -16,6 +22,22 @@ import subjects from '../data/subjects'
         <router-link class="btn btn-white" to="/videos">Ver vídeo-aulas</router-link>
         <router-link class="btn btn-ghost" to="/wiki/regulamentos">Abrir a wiki</router-link>
       </div>
+    </div>
+  </section>
+
+  <!-- Progress banner (shows once there is any progress) -->
+  <section v-if="overall.done > 0" class="prog-banner">
+    <div class="container prog-in">
+      <div class="prog-text">
+        <p class="sec-label">Seu progresso</p>
+        <h2>{{ overall.pct }}% do conteúdo concluído</h2>
+        <p class="prog-sub" v-if="firebaseEnabled && !user">
+          Entre com o Google para salvar e sincronizar entre dispositivos.
+        </p>
+        <p class="prog-sub" v-else-if="user">Sincronizado na sua conta Google.</p>
+        <p class="prog-sub" v-else>Salvo neste dispositivo.</p>
+      </div>
+      <ProgressBar :pct="overall.pct" :done="overall.done" :total="overall.total" />
     </div>
   </section>
 
@@ -66,6 +88,13 @@ import subjects from '../data/subjects'
           <div class="card-icon">{{ s.icon }}</div>
           <h3>{{ s.label }}</h3>
           <p>{{ s.desc }}</p>
+          <div class="subject-prog">
+            <ProgressBar
+              :pct="subjectStats(s.key).pct"
+              :done="subjectStats(s.key).done"
+              :total="subjectStats(s.key).total"
+            />
+          </div>
           <span class="card-link">Estudar →</span>
         </router-link>
       </div>
@@ -131,9 +160,42 @@ import subjects from '../data/subjects'
   flex-direction: column;
 }
 
+.subject-prog {
+  margin-top: 1rem;
+}
+
 .subject-card .card-link {
   margin-top: auto;
   padding-top: 0.9rem;
+}
+
+.prog-banner {
+  background: var(--accent-soft);
+  padding: 2.4rem 0;
+}
+
+.prog-in {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.prog-text {
+  flex: 1 1 280px;
+}
+
+.prog-text h2 {
+  margin-bottom: 0.3rem;
+}
+
+.prog-sub {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+.prog-in .pb {
+  flex: 1 1 280px;
 }
 
 .cta-in {

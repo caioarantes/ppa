@@ -1,11 +1,14 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useProgress } from '../composables/useProgress'
 
 // One module: a big featured player on the left and the module's other videos
 // listed small on the right. Selection is local to this section.
 const props = defineProps({
   group: { type: Object, required: true },
 })
+
+const { isVideoDone, toggleVideo } = useProgress()
 
 const selectedId = ref(props.group.videos[0]?.id ?? null)
 const playing = ref(false)
@@ -76,6 +79,15 @@ function playBig() {
         <h3>{{ selected.title }}</h3>
         <p class="feature-desc" v-if="selected.desc">{{ selected.desc }}</p>
         <div class="feature-foot">
+          <button
+            type="button"
+            class="done-btn"
+            :class="{ done: isVideoDone(selected.id) }"
+            @click="toggleVideo(selected.id)"
+          >
+            <span class="tick" aria-hidden="true">✓</span>
+            {{ isVideoDone(selected.id) ? 'Assistido' : 'Marcar como assistido' }}
+          </button>
           <a
             v-if="selected.youtubeId"
             class="card-link"
@@ -100,8 +112,16 @@ function playBig() {
             :class="{ active: video.id === selectedId, soon: !video.youtubeId }"
             @click="pick(video)"
           >
-            <span class="row-index" aria-hidden="true">
-              <span v-if="video.id === selectedId" class="bars"><i></i><i></i><i></i></span>
+            <span
+              class="row-index"
+              :class="{ checked: isVideoDone(video.id) }"
+              role="checkbox"
+              :aria-checked="isVideoDone(video.id)"
+              :title="isVideoDone(video.id) ? 'Assistido' : 'Marcar como assistido'"
+              @click.stop="toggleVideo(video.id)"
+            >
+              <span v-if="isVideoDone(video.id)" class="tick">✓</span>
+              <span v-else-if="video.id === selectedId" class="bars"><i></i><i></i><i></i></span>
               <span v-else>{{ idx + 1 }}</span>
             </span>
             <span class="thumb">
@@ -227,6 +247,54 @@ function playBig() {
 
 .feature-foot .card-link {
   margin: 0;
+}
+
+.done-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 0.34rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.done-btn .tick {
+  opacity: 0.4;
+}
+
+.done-btn:hover {
+  border-color: var(--accent);
+}
+
+.done-btn.done {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: #08304f;
+}
+
+.done-btn.done .tick {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.row-index.checked {
+  color: var(--accent);
+}
+
+.row-index[role='checkbox'] {
+  cursor: pointer;
+}
+
+.row-index .tick {
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 /* ── Side list ───────────────────────────────────────── */

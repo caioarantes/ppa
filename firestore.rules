@@ -1,0 +1,10 @@
+rules_version = '2';
+// Cada usuário só lê e escreve o próprio documento de progresso.
+// Aplique em: Firebase Console → Firestore Database → Rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /progress/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

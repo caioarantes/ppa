@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import AuthButton from './AuthButton.vue'
 
 const logoUrl = import.meta.env.BASE_URL + 'logo.svg'
 const menuOpen = ref(false)
@@ -34,6 +35,7 @@ function closeMenu() {
             Wiki
           </router-link>
         </nav>
+        <AuthButton />
       </div>
     </div>
   </header>

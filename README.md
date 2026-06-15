@@ -47,6 +47,35 @@ O script lê as playlists do canal, mapeia cada uma a uma matéria (tabela `play
 > Para domínio próprio, troque `base` para `'/'` e ajuste os caminhos `/ppa/...` em
 > `index.html` e nos `<img>` do cabeçalho.
 
+## Login Google + progresso (opcional)
+
+O site rastreia **vídeos assistidos** e **artigos lidos**, com barra de % por matéria.
+Sem login, o progresso fica salvo **no aparelho** (localStorage). Com login Google
+(Firebase), o progresso é salvo na nuvem e **sincronizado entre dispositivos** — o
+progresso local é mesclado na primeira entrada.
+
+Enquanto o Firebase não estiver configurado, o botão de login fica oculto e o progresso
+continua funcionando localmente.
+
+### Configurar o Firebase
+
+1. Crie um projeto em <https://console.firebase.google.com>.
+2. **Authentication** → Sign-in method → habilite **Google**.
+3. **Authentication** → Settings → Authorized domains → adicione `caioarantes.github.io`
+   (e `localhost` para desenvolvimento).
+4. **Firestore Database** → criar banco (modo produção) → aba **Rules** → cole o conteúdo
+   de [`firestore.rules`](./firestore.rules).
+5. Project settings → *Your apps* → registre um app Web e copie a config.
+6. Local: copie `.env.example` para `.env.local` e preencha as `VITE_FIREBASE_*`.
+7. Deploy: em **Settings → Secrets and variables → Actions**, crie os secrets
+   `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`,
+   `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`.
+   O workflow os injeta no build.
+
+> A config web do Firebase não é segredo (vai no bundle do cliente). A proteção é feita
+> pelas regras do Firestore (cada usuário só acessa o próprio documento) e pelos domínios
+> autorizados no Auth.
+
 ## Créditos
 
 - Vídeo-aulas: canal **Aviadores e Aeronautas** (YouTube).

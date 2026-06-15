@@ -4,9 +4,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { getArticles, getArticle } from '../wiki'
 import videos from '../data/videos'
 import VideoCard from '../components/VideoCard.vue'
+import { useProgress } from '../composables/useProgress'
 
 const route = useRoute()
 const router = useRouter()
+const { isArticleDone, toggleArticle } = useProgress()
 
 const articles = getArticles()
 const article = computed(() => getArticle(route.params.slug))
@@ -54,7 +56,18 @@ watchEffect(() => {
       </nav>
 
       <article v-if="article" class="wiki-article">
-        <h2 class="wiki-title">{{ article.icon }} {{ article.title }}</h2>
+        <div class="wiki-head-row">
+          <h2 class="wiki-title">{{ article.icon }} {{ article.title }}</h2>
+          <button
+            type="button"
+            class="done-btn"
+            :class="{ done: isArticleDone(article.slug) }"
+            @click="toggleArticle(article.slug)"
+          >
+            <span class="tick" aria-hidden="true">✓</span>
+            {{ isArticleDone(article.slug) ? 'Lido' : 'Marcar como lido' }}
+          </button>
+        </div>
         <p class="wiki-summary">{{ article.summary }}</p>
 
         <template v-for="(section, i) in article.sections" :key="i">
@@ -205,12 +218,56 @@ watchEffect(() => {
   min-width: 0;
 }
 
+.wiki-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .wiki-title {
   font-family: 'Fraunces', serif;
   font-size: clamp(1.5rem, 2.4vw, 1.9rem);
   font-weight: 700;
   color: var(--text);
   margin-bottom: 0.5rem;
+}
+
+.done-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 0.34rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.done-btn .tick {
+  opacity: 0.4;
+}
+
+.done-btn:hover {
+  border-color: var(--accent);
+}
+
+.done-btn.done {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: #08304f;
+}
+
+.done-btn.done .tick {
+  opacity: 1;
+  color: var(--accent);
 }
 
 .wiki-summary {
