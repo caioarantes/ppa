@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estudo PP-A | Prova teórica da ANAC para Piloto Privado</title>
+    <meta
+      name="description"
+      content="Plataforma de estudos gratuita para a prova teórica da ANAC de Piloto Privado de Avião (PP-A): vídeo-aulas e wiki teórica das cinco matérias — Regulamentos, Meteorologia, Navegação, Teoria de Voo e Conhecimentos Técnicos."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Estudo PP-A | Prova teórica da ANAC" />
+    <meta property="og:locale" content="pt_BR" />
+    <link rel="icon" type="image/svg+xml" href="/ppa/icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      (function () {
+        var redirect = sessionStorage.redirect
+        delete sessionStorage.redirect
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect)
+        }
+      })()
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

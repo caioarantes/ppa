@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 40" width="220" height="40">
+  <g fill="#0b3d66">
+    <path
+      d="M19 6c1 0 1.8.8 1.8 1.8v7.6l10.9 6.4v2.9l-10.9-3.4v6.6l2.9 2.1v2.3L19 30.1l-4.7 1.6v-2.3l2.9-2.1v-6.6L6.3 24.1v-2.9l10.9-6.4V7.8C17.2 6.8 18 6 19 6z"
+    />
+    <text x="40" y="27" font-family="Fraunces, Georgia, serif" font-size="20" font-weight="700">
+      Estudo PP-A
+    </text>
+  </g>
+</svg>
